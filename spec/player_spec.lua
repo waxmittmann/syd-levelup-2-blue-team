@@ -48,6 +48,19 @@ describe("Player", function()
             end)
         end)
 
+        describe("new player",function()
+			it("player should be in the middle of the screen", function()	
+
+                local player = Player:new(
+                    {
+                        speed = 0
+                    }
+                    )
+                    assert.is.equal(player.x, 325)
+                    assert.is.equal(player.y, 300)
+                    end)
+                    end)
+
         describe("lastPosition", function()
             it("should store the last position before moving vertically", function()
                 orig_x = 10
@@ -103,6 +116,7 @@ describe("Player", function()
                 collidingEntity.x = 10
                 collidingEntity.y = 10
                 collidingEntity.size = {
+                
                     x = 10,
                     y = 10
                 }
@@ -166,5 +180,7 @@ describe("Player", function()
                 assert.is.equal(orig_x, player.x)
             end)
         end)
-    end)
-end)
+        end)
+        end)
+
+

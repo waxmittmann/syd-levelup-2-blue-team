@@ -10,7 +10,7 @@ function Player:new(game, config)
 
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
-    newPlayer.x = config.x or 400
+    newPlayer.x = config.x or 325
     newPlayer.y = config.y or 300
     newPlayer.size = config.size or {
         x = 98,
