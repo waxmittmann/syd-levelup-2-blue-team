@@ -124,21 +124,10 @@ describe("Player", function()
             end)
 
             describe("the animation frame", function()
-                it("should stop updating when the player isn't moving", function()
-                    local player = Player:new(mock_input('none'))
+                it("should always be updating the animation state", function ()
+                    local player = Player:new(mock_input('none'))  
                     player.graphics.animation = mock_animation()
                     player:update(dt)
-
-                    assert.spy(player.graphics.animation.gotoFrame).was.called()
-                    assert.spy(player.graphics.animation.update).was_not.called()
-                end)
-
-                it("should update the animation state when the player is moving", function()
-                    local player = Player:new(mock_input('up'))
-                    player.graphics.animation = mock_animation()
-
-                    player:update(dt)
-
                     assert.spy(player.graphics.animation.update).was.called()
                 end)
             end)

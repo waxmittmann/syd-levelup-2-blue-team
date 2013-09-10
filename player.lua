@@ -107,11 +107,7 @@ function Player:update(dt)
     self.y = self.y + dy
 
     if self.graphics.animation ~= nil then
-        if dx ~= 0 or dy ~= 0 then
-            self.graphics.animation:update(dt)
-        else
-            self.graphics.animation:gotoFrame(1)
-        end
+        self.graphics.animation:update(dt)
     end
 
     if self.sound.moving.sample ~= nil then
