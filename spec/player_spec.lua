@@ -180,7 +180,7 @@ describe("Player", function()
                 assert.is.equal(orig_x, player.x)
             end)
         end)
-        end)
-        end)
+    end)
+end)
 
 
