@@ -1,3 +1,6 @@
+--require 'input'
+require 'entity'
+
 World = {}
 World.__index = World
 setmetatable(World, {__index = Entity})
@@ -7,20 +10,22 @@ setmetatable(World, {__index = Entity})
 function  World:new(game)
 	-- body
 	local newWorld = Entity:new(game)
+
     newWorld.type = "world"
-
-    newWorld.graphics =  {
-        source = "assets/images/landscape.png",
-      
-    }
-
+    newWorld.x = 0
+    newWorld.y = 0
     newWorld.size = {
         x = 600,
         y = 400
     }
 
-    return setmetatable(newWorld, self)
     
+    newWorld.graphics =  {
+         source = "assets/images/background.png",
+      
+    }
+
+    return setmetatable(newWorld, self)
 end
 
 function World:update(dt)
