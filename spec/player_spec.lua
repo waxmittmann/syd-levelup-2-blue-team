@@ -2,7 +2,7 @@ require 'player'
 require 'entity'
 
 describe("Player", function()
-    local dt = 0.1
+    local dt = 1
 
     describe("#update", function()
         mock_input = function(action)
@@ -69,9 +69,14 @@ describe("Player", function()
                     mock_input('up'),
                     {
                         x = orig_x,
-                        y = orig_y                    }
+                        y = orig_y,
+                        speed = 1
+                    }
                 )
                 player:update(dt)
+
+                assert.is.equal(player.x, 10)
+                assert.is.equal(player.y, 9)
                 assert.are.same(player.lastPosition, {x = orig_x, y = orig_y})
             end)
         end)
@@ -158,18 +163,21 @@ describe("Player", function()
             it("should decrement the player's y if the up-arrow is pressed", function()
                 local player = Player:new(mock_input('up'))
                 local orig_y = player.y
+
                 player:update(dt)
-                assert.is_true(player.y < orig_y)
+
+                assert.is.equal(orig_y - player.speed, player.y)
             end)
 
-            it("should be under the influence of gravity and fall to the ground after jumping", function ()
-                local player = Player:new(mock_input('up'))
-                player:update(1)
+            it("should not change the players x & y position if anything but the up-arrow is pressed", function()
+                local player = Player:new(mock_input('right'))
                 local orig_y = player.y
-                local orig_dy = player.dy
-                player:update(0.1)
-                assert.is.equal(player.dy > orig_dy, true)
-                -- assert.is_true(player.dy > orig_dy)
+                local orig_x = player.x
+
+                player:update(dt)
+
+                assert.is.equal(orig_y, player.y)
+                assert.is.equal(orig_x, player.x)
             end)
         end)
     end)
