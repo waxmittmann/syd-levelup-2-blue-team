@@ -6,11 +6,9 @@ love.animation = require 'vendor/anim8'
 
 local entities = {}
 local player = Player:new(love)
-local obstacle = Obstacle:new(love, {x = 200, y = 200})
 
 function love.load()
     table.insert(entities, player)
-    table.insert(entities, obstacle)
 
     love.input.bind('up', 'up')
     love.input.bind('left', 'left')
