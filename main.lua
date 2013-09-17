@@ -6,8 +6,6 @@ require 'world'
 love.animation = require 'vendor/anim8'
 
 local entities = {}
-local player = Player:new(love, {x = 100, y = 100})
-local obstacle = Obstacle:new(love, {x = 200, y = 200})
 local world = World:new(love)
 local image = love.graphics.newImage("assets/images/background.png")
 local quad = love.graphics.newQuad(0,0, 900, 500, image:getWidth(), image:getHeight())
@@ -16,13 +14,11 @@ local max_view = -450
 local view_width = 0
 local  view_height = 0
 
-
+local player = Player:new(love)
 
 function love.load()
+    table.insert(entities, player)
     table.insert(entities, world)
-    --table.insert(entities, player)
-    --table.insert(entities, obstacle)
-    
 
     love.input.bind('up', 'up')
     love.input.bind('left', 'left')

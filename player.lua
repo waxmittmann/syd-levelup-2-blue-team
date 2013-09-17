@@ -10,7 +10,7 @@ function Player:new(game, config)
 
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
-    newPlayer.x = config.x or 400
+    newPlayer.x = config.x or 325
     newPlayer.y = config.y or 300
     newPlayer.size = config.size or {
         x = 98,
@@ -20,10 +20,7 @@ function Player:new(game, config)
     newPlayer.speed = config.speed or 5
 
     newPlayer.keys = config.keys or {
-        up = "up",
-        down = "down",
-        left = "left",
-        right = "right"
+        up = "up"
     }
 
     newPlayer.graphics = config.graphics or {
@@ -69,33 +66,10 @@ function Player:collide(other)
 end
 
 function Player:update(dt)
-    local dx = 0
     local dy = 0
-
-    if self.game.input.pressed(self.keys.left) then
-        dx = dx - self.speed
-
-        if self.graphics.facing ~= "left" then
-            self.graphics.animation:flipH()
-            self.graphics.facing = "left"
-        end
-    end
-
-    if self.game.input.pressed(self.keys.right) then
-        dx = dx + self.speed
-
-        if self.graphics.facing ~= "right" then
-            self.graphics.animation:flipH()
-            self.graphics.facing = "right"
-        end
-    end
 
     if self.game.input.pressed(self.keys.up) then
         dy = dy - self.speed
-    end
-
-    if self.game.input.pressed(self.keys.down) then
-        dy = dy + self.speed
     end
 
     self.lastPosition = {
@@ -103,19 +77,14 @@ function Player:update(dt)
         y = self.y
     }
 
-    self.x = self.x + dx
     self.y = self.y + dy
 
     if self.graphics.animation ~= nil then
-        if dx ~= 0 or dy ~= 0 then
-            self.graphics.animation:update(dt)
-        else
-            self.graphics.animation:gotoFrame(1)
-        end
+        self.graphics.animation:update(dt)
     end
 
     if self.sound.moving.sample ~= nil then
-        if dx ~= 0 or dy ~= 0 then
+        if dy ~= 0 then
             self.sound.moving.sample:play()
         else
             self.sound.moving.sample:stop()
