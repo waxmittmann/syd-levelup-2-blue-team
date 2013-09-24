@@ -1,5 +1,6 @@
 require 'input'
 require 'player'
+require 'scary_animal'
 require 'obstacle'
 require 'world'
 
@@ -15,9 +16,11 @@ local view_width = 0
 local  view_height = 0
 
 local player = Player:new(love)
+local scaryAnimal = ScaryAnimal:new(love)
 
 function love.load()
     table.insert(entities, player)
+    table.insert(entities, scaryAnimal)
     table.insert(entities, world)
 
     love.input.bind('up', 'up')
@@ -32,7 +35,7 @@ function love.update(dt)
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)
             view_width = view_width - 30
-            if view_width == -450 then 
+            if view_width == -450 then
                  view_width = 0
              end
     end
