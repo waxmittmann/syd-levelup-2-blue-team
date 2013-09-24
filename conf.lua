@@ -6,7 +6,9 @@
 -- options and defaults.
 
 function love.conf(config)
-    config.title = "Nyancat to the rescue"
+    config.title = "New Game - Alex's Team"
+    config.screen.width = 450
+    config.screen.height = 500
     config.modules.joystick = false
     config.modules.mouse = false
     config.modules.physics = false
