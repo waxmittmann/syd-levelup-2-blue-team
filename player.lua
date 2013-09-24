@@ -12,12 +12,11 @@ function Player:new(game, config)
     newPlayer.type = "player"
     newPlayer.x = config.x or 325
     newPlayer.y = config.y or 300
+    newPlayer.dy = config.dy or 0
     newPlayer.size = config.size or {
         x = 98,
         y = 60
     }
-
-    newPlayer.speed = config.speed or 5
 
     newPlayer.keys = config.keys or {
         up = "up"
@@ -66,10 +65,9 @@ function Player:collide(other)
 end
 
 function Player:update(dt)
-    local dy = 0
 
     if self.game.input.pressed(self.keys.up) then
-        dy = dy - self.speed
+        self.dy = -300
     end
 
     self.lastPosition = {
@@ -77,7 +75,10 @@ function Player:update(dt)
         y = self.y
     }
 
-    self.y = self.y + dy
+    local gravity = 400
+
+    self.dy = self.dy + gravity * dt
+    self.y = self.y + self.dy * dt 
 
     if self.graphics.animation ~= nil then
         self.graphics.animation:update(dt)

@@ -70,13 +70,12 @@ describe("Player", function()
                     {
                         x = orig_x,
                         y = orig_y,
-                        speed = 1
                     }
                 )
-                player:update(dt)
+                player:update(0.1)
 
-                assert.is.equal(player.x, 10)
-                assert.is.equal(player.y, 9)
+                assert.is_true(player.x == 10)
+                assert.is_true(player.y < orig_y)
                 assert.are.same(player.lastPosition, {x = orig_x, y = orig_y})
             end)
         end)
@@ -160,24 +159,31 @@ describe("Player", function()
         end)
 
         describe("player movement", function()
-            it("should decrement the player's y if the up-arrow is pressed", function()
+            it("should decrease the player's y if the up-arrow is pressed", function()
                 local player = Player:new(mock_input('up'))
                 local orig_y = player.y
 
-                player:update(dt)
-
-                assert.is.equal(orig_y - player.speed, player.y)
+                player:update(0.1)
+                assert.is_true(orig_y > player.y)
             end)
 
-            it("should not change the players x & y position if anything but the up-arrow is pressed", function()
-                local player = Player:new(mock_input('right'))
+            it("should be under the influence of gravity and be falling when no input is pressed", function ()
+                local player = Player:new(mock_input('none'))
                 local orig_y = player.y
-                local orig_x = player.x
+                local orig_dy = player.dy
+                player:update(0.1)
+                assert.is_true(player.dy > orig_dy)
+                assert.is_true(player.y > orig_y)
+            end)
 
-                player:update(dt)
-
-                assert.is.equal(orig_y, player.y)
-                assert.is.equal(orig_x, player.x)
+            it("should be under the influence of gravity and be falling to the ground after jumping", function ()
+                local player = Player:new(mock_input('up'))
+                player:update(0.1)
+                player.game = mock_input('none')
+                local orig_y = player.y
+                local orig_dy = player.dy
+                player:update(0.1)
+                assert.is_true(player.dy > orig_dy)
             end)
         end)
     end)
