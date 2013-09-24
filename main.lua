@@ -3,6 +3,7 @@ require 'player'
 require 'scary_animal'
 require 'obstacle'
 require 'world'
+require 'distance'
 
 love.animation = require 'vendor/anim8'
 
@@ -17,18 +18,18 @@ local  view_height = 0
 
 local player = Player:new(love)
 local scaryAnimal = ScaryAnimal:new(love)
+local distance = Distance:new(love)
 
 function love.load()
     table.insert(entities, player)
     table.insert(entities, scaryAnimal)
     table.insert(entities, world)
+    table.insert(entities, distance)
 
     love.input.bind('up', 'up')
     love.input.bind('left', 'left')
     love.input.bind('right', 'right')
     love.input.bind('down', 'down')
-
-
 end
 
 function love.update(dt)
@@ -51,7 +52,6 @@ function love.update(dt)
             end
         end
     end
-
 end
 
 
