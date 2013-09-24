@@ -14,25 +14,38 @@ local quad = love.graphics.newQuad(0,0, 900, 500, image:getWidth(), image:getHei
 
 local max_view = -450
 local view_width = 0
-local  view_height = 0
+local view_height = 0
 
 local player = Player:new(love)
-local scaryAnimal = ScaryAnimal:new(love)
 local distance = Distance:new(love)
 
-function love.load()
-    table.insert(entities, player)
+
+local cron = require 'cron'
+
+function spawnScaryAnimal()
+    local scaryAnimal = ScaryAnimal:new(love)
     table.insert(entities, scaryAnimal)
+end
+
+function love.load()
+
     table.insert(entities, world)
     table.insert(entities, distance)
+    table.insert(entities, player)
 
     love.input.bind('up', 'up')
     love.input.bind('left', 'left')
     love.input.bind('right', 'right')
     love.input.bind('down', 'down')
+
+    -- more info on cron here http://tannerrogalsky.com/blog/2012/09/19/favourite-lua-libraries/
+    cron.every(2, spawnScaryAnimal)
 end
 
 function love.update(dt)
+
+    cron.update(dt)
+
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)
             view_width = view_width - 30

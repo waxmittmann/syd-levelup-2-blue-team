@@ -49,7 +49,7 @@ describe("Player", function()
         end)
 
         describe("new player",function()
-			it("player should be in the middle of the screen", function()	
+			it("player should be in the middle of the screen", function()
 
                 local player = Player:new(
                     {
@@ -91,7 +91,7 @@ describe("Player", function()
 
             describe("the animation frame", function()
                 it("should always be updating the animation state", function ()
-                    local player = Player:new(mock_input('none'))  
+                    local player = Player:new(mock_input('none'))
                     player.graphics.animation = mock_animation()
                     player:update(dt)
                     assert.spy(player.graphics.animation.update).was.called()
@@ -116,7 +116,7 @@ describe("Player", function()
                 collidingEntity.x = 10
                 collidingEntity.y = 10
                 collidingEntity.size = {
-                
+
                     x = 10,
                     y = 10
                 }

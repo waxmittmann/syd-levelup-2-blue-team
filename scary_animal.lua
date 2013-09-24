@@ -4,18 +4,19 @@ ScaryAnimal = {}
 ScaryAnimal.__index = ScaryAnimal
 setmetatable(ScaryAnimal, {__index = Entity})
 
-function ScaryAnimal:new(game, config)
-    local config = config or {}
+function ScaryAnimal:new(game)
 
     local newScaryAnimal = Entity:new(game)
-    newScaryAnimal.x = config.x or 350
-    newScaryAnimal.y = config.y or 300
-    newScaryAnimal.size = config.size or {
+    newScaryAnimal.x = 350
+    newScaryAnimal.y = 300
+    newScaryAnimal.size = {
         x = 98,
         y = 60
     }
 
-    newScaryAnimal.graphics = config.graphics or {
+    newScaryAnimal.speed = 5
+
+    newScaryAnimal.graphics = {
         source = "assets/images/scary-animal-sprites.png"
     }
 
@@ -37,7 +38,8 @@ end
 
 
 function ScaryAnimal:update(dt)
-    local dy = 0
+
+    self.x = self.x - self.speed
 
     if self.graphics.animation ~= nil then
         self.graphics.animation:update(dt)
