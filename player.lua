@@ -1,5 +1,6 @@
 require 'input'
 require 'entity'
+require 'conf'
 
 Player = {}
 Player.__index = Player
@@ -10,15 +11,16 @@ function Player:new(game, config)
 
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
-    newPlayer.x = config.x or 100
-    newPlayer.y = config.y or 400
-    newPlayer.dy = config.dy or 0
-    newPlayer.jump_height = config.jump_height or 300
-    newPlayer.gravity = config.gravity or 400
     newPlayer.size = config.size or {
         x = 98,
         y = 60
     }
+    newPlayer.x = config.x or 100
+    newPlayer.y = config.y or ScreenHeight - newPlayer.size.y
+    newPlayer.dy = config.dy or 0
+    newPlayer.jump_height = config.jump_height or 300
+    newPlayer.gravity = config.gravity or 400
+    newPlayer.speed = config.speed or 5
 
     newPlayer.keys = config.keys or {
         up = "up"
@@ -67,13 +69,13 @@ function Player:collide(other)
 end
 
 function Player:stopFallingThroughFloor()
-    if self.y > self.game.graphics:getHeight() - self.size.y then
-        self.y = self.game.graphics:getHeight() - self.size.y
+    if self.y > ScreenHeight - self.size.y then
+        self.y = ScreenHeight - self.size.y
     end
 end
 
 function Player:isOnFloor()
-    return self.y == self.game.graphics:getHeight() - self.size.y
+    return self.y == ScreenHeight - self.size.y
 end
 
 function Player:handleJump()
@@ -81,7 +83,6 @@ function Player:handleJump()
 end
 
 function Player:update(dt)
-
     if self.game.input.pressed(self.keys.up) and self:isOnFloor() then
         self:handleJump();
     end

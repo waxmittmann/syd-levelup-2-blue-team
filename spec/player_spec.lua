@@ -1,5 +1,6 @@
 require 'player'
 require 'entity'
+require 'conf'
 
 describe("Player", function()
     local dt = 1
@@ -70,7 +71,9 @@ describe("Player", function()
 			it("player should be on the floor", function()	
                 local player = Player:new(mock_game())
                 player:update(0.1)
-                assert.is.equal(player.y, player.game.graphics:getHeight() - player.size.y)
+
+                assert.is.equal(player.y, ScreenHeight - player.size.y)
+                assert.is.equal(100, player.x)
             end)
         end)
 
@@ -201,7 +204,7 @@ describe("Player", function()
 
             it("should only be able to jump whilst on the ground", function ()
                 local player = Player:new(mock_game())
-                player.handleJump = spy.new(function() end)
+                player.handleJump = spy.new(player.handleJump)
                 player.game.input = mock_input("up").input
                 player:update(0.1)
                 player.game.input = mock_input("up").input
