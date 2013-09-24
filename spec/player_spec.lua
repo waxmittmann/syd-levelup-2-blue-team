@@ -38,9 +38,27 @@ describe("Player", function()
             return sound_spy
         end
 
+        mock_graphics = function ()
+            return { 
+                getHeight = function ()
+                    return 300
+                end
+            }
+        end
+
+        mock_game = function() 
+            return {
+                update = mock_animation().update,
+                graphics = mock_graphics(),
+                input = mock_input("none").input
+            }
+        end
+
+
         describe("playing the movement sound", function()
             it("should play the movement sound when the player is moving", function()
-                local player = Player:new(mock_input('up'))
+                local player = Player:new(mock_game())
+                player.game.input = mock_input('up').input
                 player.sound.moving.sample = mock_sound()
                 player:update(dt)
 
@@ -49,34 +67,24 @@ describe("Player", function()
         end)
 
         describe("new player",function()
-			it("player should be in the middle of the screen", function()
-
-                local player = Player:new(
-                    {
-                        speed = 0
-                    }
-                    )
-                    assert.is.equal(player.x, 325)
-                    assert.is.equal(player.y, 300)
-                    end)
-                    end)
+			it("player should be on the floor", function()	
+                local player = Player:new(mock_game())
+                player:update(0.1)
+                assert.is.equal(player.y, player.game.graphics:getHeight() - player.size.y)
+            end)
+        end)
 
         describe("lastPosition", function()
             it("should store the last position before moving vertically", function()
-                orig_x = 10
-                orig_y = 10
-                local player = Player:new(
-                    mock_input('up'),
-                    {
-                        x = orig_x,
-                        y = orig_y,
-                    }
-                )
-                player:update(0.1)
+                local player = Player:new(mock_game())
+                player.x = 10
+                player.y = 10
+                player.game.input = mock_input('none').input
 
+                player:update(0.1)
                 assert.is_true(player.x == 10)
-                assert.is_true(player.y < orig_y)
-                assert.are.same(player.lastPosition, {x = orig_x, y = orig_y})
+                assert.is_true(player.y > 10)
+                assert.are.same(player.lastPosition, {x = 10, y = 10})
             end)
         end)
 
@@ -90,7 +98,8 @@ describe("Player", function()
 
             describe("the animation frame", function()
                 it("should always be updating the animation state", function ()
-                    local player = Player:new(mock_input('none'))
+                    local player = Player:new(mock_game())
+                    player.game.input = mock_input('none').input
                     player.graphics.animation = mock_animation()
                     player:update(dt)
                     assert.spy(player.graphics.animation.update).was.called()
@@ -160,7 +169,8 @@ describe("Player", function()
 
         describe("player movement", function()
             it("should decrease the player's y if the up-arrow is pressed", function()
-                local player = Player:new(mock_input('up'))
+                local player = Player:new(mock_game())
+                player.game.input = mock_input('up').input
                 local orig_y = player.y
 
                 player:update(0.1)
@@ -168,7 +178,9 @@ describe("Player", function()
             end)
 
             it("should be under the influence of gravity and be falling when no input is pressed", function ()
-                local player = Player:new(mock_input('none'))
+                local player = Player:new(mock_game())
+                player.game.input = mock_input('none').input
+                player.y = 0
                 local orig_y = player.y
                 local orig_dy = player.dy
                 player:update(0.1)
@@ -177,13 +189,24 @@ describe("Player", function()
             end)
 
             it("should be under the influence of gravity and be falling to the ground after jumping", function ()
-                local player = Player:new(mock_input('up'))
+                local player = Player:new(mock_game())
+                player.game.input = mock_input('up').input
                 player:update(0.1)
-                player.game = mock_input('none')
+                player.game.input = mock_input('none').input
                 local orig_y = player.y
                 local orig_dy = player.dy
                 player:update(0.1)
                 assert.is_true(player.dy > orig_dy)
+            end)
+
+            it("should only be able to jump whilst on the ground", function ()
+                local player = Player:new(mock_game())
+                player.handleJump = spy.new(function() end)
+                player.game.input = mock_input("up").input
+                player:update(0.1)
+                player.game.input = mock_input("up").input
+                player:update(0.1)
+                assert.spy(player.handleJump).was.called(1)
             end)
         end)
     end)
