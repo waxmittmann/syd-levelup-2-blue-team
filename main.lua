@@ -19,8 +19,8 @@ local view_height = 0
 local player = Player:new(love)
 local distance = Distance:new(love)
 
-
 local cron = require 'cron'
+
 
 function spawnScaryAnimal()
     local scaryAnimal = ScaryAnimal:new(love)
@@ -39,12 +39,21 @@ function love.load()
     love.input.bind('down', 'down')
 
     -- more info on cron here http://tannerrogalsky.com/blog/2012/09/19/favourite-lua-libraries/
-    cron.every(2, spawnScaryAnimal)
+
+    math.randomseed(os.time())
+
+    cron.after(math.random(2, 4), spawnScaryAnimal)
+
 end
 
 function love.update(dt)
 
     cron.update(dt)
+
+    -- loop over scary animals
+        -- if off screen
+            -- remove
+            -- and respawn
 
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)

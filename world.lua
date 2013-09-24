@@ -19,10 +19,10 @@ function  World:new(game)
         y = 400
     }
 
-    
+
     newWorld.graphics =  {
          source = "assets/images/background.png",
-      
+
     }
 
     return setmetatable(newWorld, self)
@@ -35,3 +35,16 @@ end
 
 function World:draw()
 end
+
+-- NOTE: seems weird but too lazy to handle both axis, not required right now
+function World:onScreen(entity)
+    local onScreen = true
+    if entity.x > self.size.x then
+        onScreen = false
+    end
+    if entity.x + entity.size.x < 0 then
+        onScreen = false
+    end
+    return onScreen
+end
+

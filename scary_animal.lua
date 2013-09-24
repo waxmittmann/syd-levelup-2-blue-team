@@ -36,7 +36,6 @@ function ScaryAnimal:new(game)
     return setmetatable(newScaryAnimal, self)
 end
 
-
 function ScaryAnimal:update(dt)
 
     self.x = self.x - self.speed
