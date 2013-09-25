@@ -83,6 +83,7 @@ function Player:handleJump()
 end
 
 function Player:update(dt)
+    print("Starting update")
     if self.game.input.pressed(self.keys.up) and self:isOnFloor() then
         self:handleJump();
     end
@@ -97,9 +98,13 @@ function Player:update(dt)
 
     self:stopFallingThroughFloor()
 
+    print("Before anim")
+
     if self.graphics.animation ~= nil then
         self.graphics.animation:update(dt)
     end
+    
+    print("After anim")
 
     if self.sound.moving.sample ~= nil then
         if dy ~= 0 then
@@ -108,4 +113,9 @@ function Player:update(dt)
             self.sound.moving.sample:stop()
         end
     end
+    
+    print("After sound")
+
+    
+    print("Ending update")
 end

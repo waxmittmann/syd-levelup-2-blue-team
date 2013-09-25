@@ -7,12 +7,13 @@ setmetatable(ScaryAnimal, {__index = Entity})
 function ScaryAnimal:new(game)
 
     local newScaryAnimal = Entity:new(game)
-    newScaryAnimal.x = 350
-    newScaryAnimal.y = 300
+    newScaryAnimal.type = "ScaryAnimal"
     newScaryAnimal.size = {
         x = 98,
         y = 60
     }
+    newScaryAnimal.x = ScreenWidth - 100
+    newScaryAnimal.y = ScreenHeight - newScaryAnimal.size.y
 
     newScaryAnimal.speed = 5
 
