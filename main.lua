@@ -59,75 +59,17 @@ function love.update(dt)
            
    -- print("Test")
     
-    --[[
+    --remove dead scaryAnimal and respawn after 2-4 seconds
     local i = 1
     while i <= #entities do
-        print("Looping")
         if entities[i].type ~= nil and entities[i].type == "ScaryAnimal" and not world:onScreen(entities[i]) then
-            print("Before Remove")
             table.remove(entities, i)
-            print("After Remove")
             cron.after(math.random(2, 4), spawnScaryAnimal)
-            print("After Add")
         else
-          print("Skipping")
           i = i + 1
         end
     end    
-    print("After loop")
-  --]]
   
---[[    
-    local i = 1
-    while i <= #entities do
-        if entities[i].type ~= nil and entities[i].type == "ScaryAnimal" and not world:onScreen(entities[i]) then
-            table.remove(entities, i)
-        --else
-        end
-        i = i + 1
-    end    
---]]
-
---[[    
-    local a = nil      
-    local i=1
-    if scaryAnimal ~= nil and not world:onScreen(scaryAnimal) then
-      entities[scaryAnimal] = nil
-      cron.after(math.random(2, 4), spawnScaryAnimal)
-    end
-  
-      for _, entity in pairs(entities) do
-      if entity.type == "ScaryAnimal" then
-        if(~world:onScreen(entity))
-          
-        end
-      end
-    end
---]]
-  
-    --[[
-    while i <= #entities do
-        if entities[i].type == "ScaryAnimal" and not world:onScreen(entities[i]) then
-          a = entities[i]
-            print("Removing ScaryAnimal")
-            --table.remove(entities, i)
-        --else
-            i = i + 1
-        end
-    end    
-    print("Next")
-        --]]
-        
-    --[[
-    for _, entity in pairs(entities) do
-      if entity.type == "ScaryAnimal" then
-        if(~world:onScreen(entity))
-          
-        end
-      end
-    end
-    --]]
-
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)
             view_width = view_width - 30
@@ -136,21 +78,17 @@ function love.update(dt)
              end
     end
 
-    print("Starting update / collide")
     for _, entity in pairs(entities) do
-        print("Updating " .. entity.type);
         entity:update(dt)
 
         for _, other in pairs(entities) do
             if other ~= entity then
-                print("Colliding " .. entity.type .. " with " .. other.type)
                 if entity:collidingWith(other) then
                     entity:collide(other)
                 end
             end
         end
     end
-    print("Finished update / collide")
 
 end
 
