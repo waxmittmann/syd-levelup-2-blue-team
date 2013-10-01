@@ -12,7 +12,7 @@ function Distance:new(game)
 	local newDistance = Entity:new(game)
 	newDistance.type = "Distance"
 	newDistance.counter = 0
-  love.graphics.setFont(love.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize))
+  game.graphics.setFont(game.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize))
 	newDistance.size = {
         x = 0,
         y = 0
