@@ -56,6 +56,24 @@ function love.update(dt)
             -- remove
             -- and respawn
 
+    local i = 1
+    
+    while i <= #entities do
+        local removedItem = false
+        if entities[i].type ~= nil and entities[i].type == 'scary_animal'
+            and not world:onScreen(entities[i]) then
+                table.remove(entities, i)
+                cron.after(math.random(2, 4), spawnScaryAnimal)
+                removedItem = true
+        end
+
+        if removedItem == false then
+            i = i + 1
+        end
+    end
+    
+
+
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)
             view_width = view_width - 30

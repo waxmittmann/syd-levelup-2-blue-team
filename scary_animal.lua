@@ -1,4 +1,5 @@
 require 'entity'
+require 'conf'
 
 ScaryAnimal = {}
 ScaryAnimal.__index = ScaryAnimal
@@ -7,17 +8,18 @@ setmetatable(ScaryAnimal, {__index = Entity})
 function ScaryAnimal:new(game)
 
     local newScaryAnimal = Entity:new(game)
-    newScaryAnimal.x = 350
-    newScaryAnimal.y = 300
+    newScaryAnimal.type = "scary_animal"
     newScaryAnimal.size = {
-        x = 98,
+        x = 64,
         y = 60
     }
+    newScaryAnimal.x = ScreenWidth
+    newScaryAnimal.y = ScreenHeight - newScaryAnimal.size.y
 
-    newScaryAnimal.speed = 5
+    newScaryAnimal.speed = 3
 
     newScaryAnimal.graphics = {
-        source = "assets/images/scary-animal-sprites.png"
+        source = "assets/images/scary-animal-sprites-wolf.png"
     }
 
     if game.graphics ~= nil and game.animation ~= nil then
@@ -28,7 +30,7 @@ function ScaryAnimal:new(game)
             newScaryAnimal.graphics.sprites:getHeight()
         )
         newScaryAnimal.graphics.animation = game.animation.newAnimation(
-            newScaryAnimal.graphics.grid("1-1", 1),
+            newScaryAnimal.graphics.grid("1-3", 1),
             0.05
         )
     end
