@@ -2,6 +2,7 @@ require 'input'
 require 'player'
 require 'obstacle'
 require 'world'
+require 'conf'
 
 Distance = {}
 Distance.__index = Distance
@@ -11,6 +12,7 @@ function Distance:new(game)
 	local newDistance = Entity:new(game)
 	newDistance.type = "Distance"
 	newDistance.counter = 0
+  game.graphics.setFont(game.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize))
 	newDistance.size = {
         x = 0,
         y = 0
@@ -24,5 +26,6 @@ function Distance:update(dt)
 end
 
 function Distance:draw()
-	self.game.graphics.print(math.floor(self.counter), 300, 300)
+  distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
+	self.game.graphics.print(distance, DistanceMeterXOffset, DistanceMeterYOffset)
 end
