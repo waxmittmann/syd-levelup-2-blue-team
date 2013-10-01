@@ -7,7 +7,7 @@
 ScreenWidth = 700
 ScreenHeight = 500
 DistanceMeterYOffset = 30
-DistanceMeterXOffset = ScreenWidth - 230
+DistanceMeterXOffset = ScreenWidth - 260
 DistanceFontSize = 20
 
 function love.conf(config)

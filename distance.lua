@@ -26,6 +26,6 @@ function Distance:update(dt)
 end
 
 function Distance:draw()
-  distance = self.type .. " travelled: " .. tostring(math.floor(self.counter))
+  distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
 	self.game.graphics.print(distance, DistanceMeterXOffset, DistanceMeterYOffset)
 end
