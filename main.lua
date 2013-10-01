@@ -4,6 +4,7 @@ require 'scary_animal'
 require 'obstacle'
 require 'world'
 require 'distance'
+require 'person'
 
 love.animation = require 'vendor/anim8'
 
@@ -21,12 +22,27 @@ local distance = Distance:new(love)
 
 local cron = require 'cron'
 
+local spawningPerson = false
+
 
 function spawnScaryAnimal()
     local scaryAnimal = ScaryAnimal:new(love)
     table.insert(entities, scaryAnimal)
     --entities[scaryAnimal] = true
     print("Added scary animal")
+end
+
+function spawnPerson()
+    local person = Person:new(love)
+    local i = 0
+    for i=0, math.random(0, 2) do
+      local person = Person:new(love)
+      person.x = person.x - (person.size.x * i)
+      table.insert(entities, person)
+    end
+    spawningPerson = false
+   -- table.insert(entities, person)
+ --   print("Added scary animal")
 end
 
 function love.load()
@@ -45,12 +61,13 @@ function love.load()
     math.randomseed(os.time())
 
     cron.after(math.random(2, 4), spawnScaryAnimal)
-  
+--    cron.after(math.random(2, 4), spawnPerson)
 end
 
 function love.update(dt)
 
     cron.update(dt)
+--    cron.update(0.01)
 
     -- loop over scary animals
         -- if off screen
@@ -61,14 +78,33 @@ function love.update(dt)
     
     --remove dead scaryAnimal and respawn after 2-4 seconds
     local i = 1
+    local hadPerson = false
     while i <= #entities do
-        if entities[i].type ~= nil and entities[i].type == "ScaryAnimal" and not world:onScreen(entities[i]) then
+        local removedItem = false
+        if entities[i].type ~= nil and entities[i].type == "scary_animal" 
+          and not world:onScreen(entities[i]) then
             table.remove(entities, i)
             cron.after(math.random(2, 4), spawnScaryAnimal)
-        else
+            removedItem = true
+       elseif entities[i].type ~= nil and entities[i].type == "person" then
+          if not world:onScreen(entities[i]) then
+            table.remove(entities, i)
+           -- cron.after(math.random(2, 4), spawnPerson)
+            removedItem = true
+          else
+--            print("Had person")
+            hadPerson = true
+          end
+        end
+        if removedItem == false then
           i = i + 1
         end
     end    
+  
+    if hadPerson ~= true and spawningPerson ~= true then
+      spawningPerson = true
+      cron.after(math.random(2, 4), spawnPerson)
+    end
   
     if view_width > max_view then
             love.graphics.drawq(image, quad, view_width, view_height)
@@ -80,7 +116,6 @@ function love.update(dt)
 
     for _, entity in pairs(entities) do
         entity:update(dt)
-
         for _, other in pairs(entities) do
             if other ~= entity then
                 if entity:collidingWith(other) then

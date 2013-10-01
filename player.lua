@@ -12,10 +12,17 @@ function Player:new(game, config)
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
     newPlayer.size = config.size or {
-        x = 98,
-        y = 60
+--[[        x = 98,
+        y = 60--]]
+        --[[x = 46, 
+        y = 56--]]        
+        x = 52, 
+        y = 50
+        
     }
-    newPlayer.x = config.x or 100
+    newPlayer.colliding = false
+    newPlayer.x = config.x or 250
+    newPlayer.originX = 250
     newPlayer.y = config.y or ScreenHeight - newPlayer.size.y
     newPlayer.dy = config.dy or 0
     newPlayer.jump_height = config.jump_height or 300
@@ -27,7 +34,8 @@ function Player:new(game, config)
     }
 
     newPlayer.graphics = config.graphics or {
-        source = "assets/images/nyancat-sprites.png",
+--        source = "assets/images/nyancat-sprites.png",
+        source = "assets/images/PlayerAnimalSprites2.png",
         facing = "right"
     }
 
@@ -55,7 +63,8 @@ function Player:new(game, config)
             newPlayer.graphics.sprites:getHeight()
         )
         newPlayer.graphics.animation = game.animation.newAnimation(
-            newPlayer.graphics.grid("1-6", 1),
+--            newPlayer.graphics.grid("1-6", 1),
+            newPlayer.graphics.grid("1-4", 1),
             0.05
         )
     end
@@ -64,8 +73,11 @@ function Player:new(game, config)
 end
 
 function Player:collide(other)
-    self.x = self.lastPosition.x
-    self.y = self.lastPosition.y
+--    self.x = self.lastPosition.x
+--    self.y = self.lastPosition.y
+  if other.type == 'person' then
+    self.colliding = true
+  end
 end
 
 function Player:stopFallingThroughFloor()
@@ -88,6 +100,13 @@ function Player:update(dt)
         self:handleJump();
     end
 
+  if self.colliding == true then
+    self.x = self.x - 2
+    self.colliding = false
+  elseif self.x < self.originX then
+    self.x = self.x + 1
+  end
+
     self.lastPosition = {
         x = self.x,
         y = self.y
@@ -97,6 +116,7 @@ function Player:update(dt)
     self.y = self.y + self.dy * dt
 
     self:stopFallingThroughFloor()
+
 
 --    print("Before anim")
 

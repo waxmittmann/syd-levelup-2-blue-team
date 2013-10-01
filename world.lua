@@ -15,7 +15,7 @@ function  World:new(game)
     newWorld.x = 0
     newWorld.y = 0
     newWorld.size = {
-        x = 600,
+        x = 700,
         y = 400
     }
 
