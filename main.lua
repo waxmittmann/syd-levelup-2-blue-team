@@ -4,13 +4,14 @@ require 'scary_animal'
 require 'obstacle'
 require 'world'
 require 'distance'
+require 'conf'
 
 love.animation = require 'vendor/anim8'
 
 local entities = {}
 local world = World:new(love)
 local image = love.graphics.newImage("assets/images/background.png")
-local quad = love.graphics.newQuad(0,0, 900, 500, image:getWidth(), image:getHeight())
+local quad = love.graphics.newQuad(0,0, ScreenWidth, ScreenHeight, image:getWidth(), image:getHeight())
 
 local max_view = -450
 local view_width = 0

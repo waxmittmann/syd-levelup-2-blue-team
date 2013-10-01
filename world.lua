@@ -1,5 +1,6 @@
 --require 'input'
 require 'entity'
+require 'conf'
 
 World = {}
 World.__index = World
@@ -15,8 +16,8 @@ function  World:new(game)
     newWorld.x = 0
     newWorld.y = 0
     newWorld.size = {
-        x = 600,
-        y = 400
+        x = ScreenWidth,
+        y = ScreenHeight
     }
 
 
