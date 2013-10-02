@@ -157,10 +157,9 @@ function love.update(dt)
     end
 end
 
+--[[
 function drawGameOver()
   local image = love.graphics.newImage( 'assets/images/GameOverScreen.png' )
---  local quad = love.graphics.newQuad(0,0, image:getWidth(), image:getHeight(), 1, 1)
---  love.graphics.drawq( image, quad, 100, 100)
   love.graphics.setColor(255, 255, 255,255);
   local msg = "You were caught! But you made it " .. distance:getDistance() .. " meters. " .. "Press Enter to play again..."
   local font = love.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize)
@@ -168,10 +167,21 @@ function drawGameOver()
   love.graphics.draw(image, 0, 0)
   love.graphics.setColor(0, 0, 0,255);
   love.graphics.print(msg, ScreenWidth/2-font:getWidth(msg)/2, ScreenHeight/2-font:getHeight()/2);
---  love.graphics.print(msg, ScreenWidth/2-font:getWidth(msg)/2, offset+ScreenHeight/2-font:getHeight()/2);
---  love.graphics.print(msg, 0);
---  love.graphics.draw(image, (ScreenWidth-image:getWidth())/2, ScreenHeight-image:getHeight()-font:getHeight()/2)
---  love.graphics.draw(image, (ScreenWidth-image:getWidth())/2, offset)
+  love.graphics.setColor(255, 255, 255,255);
+  return  
+end  
+--]]
+
+function drawGameOver()
+  local image = love.graphics.newImage( 'assets/images/GameOverScreen.png' )
+  love.graphics.setColor(255, 255, 255,255);
+  local msg1 = "You were caught! But you made it " .. distance:getDistance() .. " meters. " 
+  local msg2 = "Press Enter to play again..."
+  local font = love.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize)
+  love.graphics.draw(image, 0, 0)
+  love.graphics.setColor(0, 0, 0,255);
+  love.graphics.print(msg1, ScreenWidth/2-font:getWidth(msg1)/2, ScreenHeight/2-font:getHeight());
+  love.graphics.print(msg2, ScreenWidth/2-font:getWidth(msg2)/2, ScreenHeight/2);
   love.graphics.setColor(255, 255, 255,255);
   return  
 end  
