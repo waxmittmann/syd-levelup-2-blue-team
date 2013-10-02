@@ -11,11 +11,13 @@ function Player:new(game, config)
 
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
+    newPlayer.colliding = false
     newPlayer.size = config.size or {
         x = 98,
         y = 60
     }
     newPlayer.x = config.x or 100
+    newPlayer.originX = newPlayer.x
     newPlayer.y = config.y or ScreenHeight - newPlayer.size.y
     newPlayer.dy = config.dy or 0
     newPlayer.jump_height = config.jump_height or 300
@@ -64,8 +66,9 @@ function Player:new(game, config)
 end
 
 function Player:collide(other)
-    self.x = self.lastPosition.x
-    self.y = self.lastPosition.y
+  if other.type == 'person' then
+    self.colliding = true
+  end
 end
 
 function Player:stopFallingThroughFloor()
@@ -94,6 +97,13 @@ function Player:update(dt)
 
     self.dy = self.dy + self.gravity * dt
     self.y = self.y + self.dy * dt
+
+    if self.colliding == true then
+      self.x = self.x - 2
+      self.colliding = false
+    elseif self.x < self.originX then
+      self.x = self.x + 1
+    end
 
     self:stopFallingThroughFloor()
 

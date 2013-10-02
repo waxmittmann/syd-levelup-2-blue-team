@@ -29,3 +29,10 @@ function Distance:draw()
   distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
 	self.game.graphics.print(distance, DistanceMeterXOffset, DistanceMeterYOffset)
 end
+
+function Distance:getDistance()
+  if self.counter == nil then
+    return 0
+  end
+  return math.floor(self.counter)
+end
