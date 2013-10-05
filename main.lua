@@ -1,31 +1,39 @@
 require 'input'
 require 'player'
 require 'scary_animal'
+require 'flying_animal'
 require 'obstacle'
 require 'world'
 require 'distance'
 require 'conf'
 require 'person'
+require 'panicmeter'
 
 love.animation = require 'vendor/anim8'
 
 local entities = {}
 local world = World:new(love)
-local image = love.graphics.newImage("assets/images/background.png")
+local image = love.graphics.newImage("assets/images/BackgroundImage2.png")
+--local image = love.graphics.newImage("assets/images/background.png")
 local quad = love.graphics.newQuad(0,0, ScreenWidth, ScreenHeight, image:getWidth(), image:getHeight())
+local quad2 = love.graphics.newQuad(ScreenWidth, ScreenHeight, ScreenWidth, ScreenHeight, image:getWidth(), image:getHeight())
 
-local max_view = -450
+--local max_view = -450
 local view_width = 0
 local view_height = 0
 
 local player = Player:new(love)
 local distance = Distance:new(love)
+local panicmeter = Panicmeter:new(love)
 
+-- more info on cron here http://tannerrogalsky.com/blog/2012/09/19/favourite-lua-libraries/
 local cron = require 'cron'
 
 local spawningCrowd = false
 
 local isGameOver = false
+
+local scaryAnimalsSpawning = 0
 
 function initGame()
   entities = {}
@@ -34,6 +42,7 @@ function initGame()
 
   player = Player:new(love)
   distance = Distance:new(love)
+  panicmeter = Panicmeter:new(love)
 
   cron = require 'cron'
 
@@ -41,16 +50,35 @@ function initGame()
 
   isGameOver = false  
     
+  --[[
+  panicmeter:incPanic()  
+  panicmeter:incPanic()  
+  panicmeter:incPanic()  
+  panicmeter:incPanic()  
+  --]]
+  
   table.insert(entities, player)
   table.insert(entities, world)
   table.insert(entities, distance)
+  table.insert(entities, panicmeter)
   
-  cron.after(math.random(2, 4), spawnScaryAnimal)
+  --cron.after(math.random(2, 4), spawnScaryAnimal)
 end
 
 function spawnScaryAnimal()
-    local scaryAnimal = ScaryAnimal:new(love)
+--    local scaryAnimal = ScaryAnimal:new(love)
+
+    local toGen = math.random(1,2)
+    local scaryAnimal = nil
+    if toGen == 1 then
+      scaryAnimal = FlyingAnimal:new(love)
+    else
+      scaryAnimal = ScaryAnimal:new(love)
+    end
+     
     table.insert(entities, scaryAnimal)
+    
+    scaryAnimalsSpawning = scaryAnimalsSpawning - 1
 end
 
 function removeOutOfBoundsCrowds()
@@ -75,6 +103,10 @@ function isPlayerOutOfBounds()
   return not world:onScreen(player)
 end
 
+function isPanicmeterFull()
+  return panicmeter:getPanic() >= 100
+end
+
 function spawnCrowd()
     local person = Person:new(love)
     local i = 0
@@ -86,6 +118,10 @@ function spawnCrowd()
     spawningCrowd = false
 end
 
+function hitScaryAnimal()
+  panicmeter:incPanic()
+end
+
 function love.load()
 
     love.input.bind('up', 'up')
@@ -94,8 +130,6 @@ function love.load()
     love.input.bind('down', 'down')
     love.input.bind('return', 'return')
     
-    -- more info on cron here http://tannerrogalsky.com/blog/2012/09/19/favourite-lua-libraries/
-
     math.randomseed(os.time())
 
     initGame()
@@ -113,6 +147,9 @@ function love.update(dt)
       --this is where we can add code for ending the game if the player   
       isGameOver = true
       return
+    elseif isPanicmeterFull() then
+      isGameOver = true
+      return      
     end
     
     cron.update(dt)
@@ -122,13 +159,18 @@ function love.update(dt)
     end
 
     local i = 1    
+    local scaryAnimalCount = 0
+    local removedScaryAnimal = false
     while i <= #entities do
         local removedItem = false
-        if entities[i].type ~= nil and entities[i].type == 'scary_animal'
-            and not world:onScreen(entities[i]) then
+        if entities[i].type ~= nil and entities[i].type == 'scary_animal' then
+            if not world:onScreen(entities[i]) then
                 table.remove(entities, i)
-                cron.after(math.random(2, 4), spawnScaryAnimal)
+                removedScaryAnimal = true
                 removedItem = true
+            else
+                scaryAnimalCount = scaryAnimalCount + 1
+            end
         end
 
         if removedItem == false then
@@ -136,14 +178,40 @@ function love.update(dt)
         end
     end
     
-    if view_width > max_view then
-            love.graphics.drawq(image, quad, view_width, view_height)
-            view_width = view_width - 30
-            if view_width == -450 then
+    --Spawn one animal every 2-4 seconds
+    --[[
+    if scaryAnimalCount == 0 and scaryAnimalsSpawning == 0 then
+      cron.after(math.random(2, 4), spawnScaryAnimal)
+      scaryAnimalsSpawning = scaryAnimalsSpawning + 1
+    end
+    --]]
+    
+    --Spawn one animal every 2-4 seconds, up to 3 total
+    print(scaryAnimalCount .. ", " .. scaryAnimalsSpawning)
+    if scaryAnimalCount < 3 and scaryAnimalsSpawning == 0 then
+      cron.after(math.random(2, 4), spawnScaryAnimal)
+      scaryAnimalsSpawning = scaryAnimalsSpawning + 1
+    end
+
+    --Spawn up to 3 scary animals, with a certain percentage chance
+    --[[
+    local spawnPerc = math.random(1, 100)
+    if spawnPerc >= 99 and scaryAnimalCount < 3 then
+      spawnScaryAnimal()
+    end
+    --]]
+    
+    if view_width > -ScreenWidth then
+            --love.graphics.drawq(image, quad, 0, view_height)
+            --love.graphics.drawq(image, quad, view_width, view_height)
+            
+            view_width = view_width - 2
+            print(view_width)
+            if view_width <= -ScreenWidth then
                  view_width = 0
              end
     end
-
+    
     for _, entity in pairs(entities) do
         entity:update(dt)
 
@@ -155,22 +223,13 @@ function love.update(dt)
             end
         end
     end
-end
+    
+    if player:isHitScaryAnimal() then
+      panicmeter:incPanic()      
+      player:resetHitScaryAnimal()
+    end
 
---[[
-function drawGameOver()
-  local image = love.graphics.newImage( 'assets/images/GameOverScreen.png' )
-  love.graphics.setColor(255, 255, 255,255);
-  local msg = "You were caught! But you made it " .. distance:getDistance() .. " meters. " .. "Press Enter to play again..."
-  local font = love.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize)
-  local offset = 100
-  love.graphics.draw(image, 0, 0)
-  love.graphics.setColor(0, 0, 0,255);
-  love.graphics.print(msg, ScreenWidth/2-font:getWidth(msg)/2, ScreenHeight/2-font:getHeight()/2);
-  love.graphics.setColor(255, 255, 255,255);
-  return  
-end  
---]]
+end
 
 function drawGameOver()
   local image = love.graphics.newImage( 'assets/images/GameOverScreen.png' )
@@ -188,6 +247,7 @@ end
 
 function drawGameScreen()
     love.graphics.drawq(image, quad, view_width, view_height)
+    love.graphics.drawq(image, quad, ScreenWidth + view_width, view_height)
     for _, e in pairs(entities) do
         e:draw()
     end  

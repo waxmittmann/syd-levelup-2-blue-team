@@ -9,6 +9,7 @@ ScreenHeight = 500
 DistanceMeterYOffset = 30
 DistanceMeterXOffset = ScreenWidth - 260
 DistanceFontSize = 20
+PathHeightOffset = 30
 
 function love.conf(config)
     config.title = "New Game - Alex's Team"
@@ -17,4 +18,6 @@ function love.conf(config)
     config.modules.joystick = false
     config.modules.mouse = false
     config.modules.physics = false
+    config.jump_height = 1500
+    config.gravity = 1000
 end

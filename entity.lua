@@ -27,9 +27,34 @@ function Entity:bounds()
     }
 end
 
+function Entity:collisionBounds()
+    if self.csize ~= nil and self.csize.x ~= nil and self.csize.y ~= nil then
+--[[      print("Using collision Bounds")
+      print(
+          self.y+(self.size.y-self.csize.y)/2 .. " " ..
+          self.x+(self.size.x-self.csize.x)/2 .. " " ..
+          self.y + self.size.y-(self.size.y-self.csize.y)/2 .. " " ..
+          self.x + self.size.x-(self.size.x-self.csize.x)/2        
+      )--]]
+      return {
+          top = self.y+(self.size.y-self.csize.y)/2,
+          left = self.x+(self.size.x-self.csize.x)/2,
+          bottom = self.y + self.size.y-(self.size.y-self.csize.y)/2,
+          right = self.x + self.size.x+(self.size.x-self.csize.x)/2
+      }      
+    else
+      return {
+          top = self.y,
+          left = self.x,
+          bottom = self.y + self.size.y,
+          right = self.x + self.size.x
+      }
+    end
+end
+
 function Entity:collidingWith(other)
-    local bounds = self:bounds()
-    local other = other:bounds()
+    local bounds = self:collisionBounds()
+    local other = other:collisionBounds()
 
     local my_left_overlaps_their_right = bounds.left <= other.right and bounds.right >= other.right
     local my_right_overlaps_their_left = bounds.right >= other.left and bounds.left <= other.left

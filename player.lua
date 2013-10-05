@@ -13,23 +13,31 @@ function Player:new(game, config)
     newPlayer.type = "player"
     newPlayer.colliding = false
     newPlayer.size = config.size or {
-        x = 98,
-        y = 60
+        x = 52,
+        y = 50
+--        x = 125,
+--        y = 87
     }
     newPlayer.x = config.x or 100
     newPlayer.originX = newPlayer.x
     newPlayer.y = config.y or ScreenHeight - newPlayer.size.y
     newPlayer.dy = config.dy or 0
-    newPlayer.jump_height = config.jump_height or 300
-    newPlayer.gravity = config.gravity or 400
+--    newPlayer.jump_height = config.jump_height or 300
+--    newPlayer.gravity = config.gravity or 400
+    newPlayer.jump_height = config.jump_height or 600
+    newPlayer.gravity = config.gravity or 600
     newPlayer.speed = config.speed or 5
+    newPlayer.hitScaryAnimal = false
+   -- newPlayer.lastScaryAnimalHit = nil
+    --newPlayer.hitScaryAnimalLastTurn = false    
 
     newPlayer.keys = config.keys or {
         up = "up"
     }
 
     newPlayer.graphics = config.graphics or {
-        source = "assets/images/nyancat-sprites.png",
+        source = "assets/images/PlayerAnimalSprites2.png",
+--        source = "assets/images/WireframeRabbit.png",
         facing = "right"
     }
 
@@ -57,7 +65,7 @@ function Player:new(game, config)
             newPlayer.graphics.sprites:getHeight()
         )
         newPlayer.graphics.animation = game.animation.newAnimation(
-            newPlayer.graphics.grid("1-6", 1),
+            newPlayer.graphics.grid("1-4", 1),
             0.05
         )
     end
@@ -69,6 +77,19 @@ function Player:collide(other)
   if other.type == 'person' then
     self.colliding = true
   end
+  if self.lastScaryAnimalHit ~= other and other.type == 'scary_animal' and other.alreadyHit == false then
+    other.alreadyHit = true
+    self.hitScaryAnimal = true
+--    self.lastScaryAnimalHit = other
+  end
+end
+
+function Player:isHitScaryAnimal()
+  return self.hitScaryAnimal
+end
+
+function Player:resetHitScaryAnimal()
+  self.hitScaryAnimal = false
 end
 
 function Player:stopFallingThroughFloor()
@@ -111,6 +132,7 @@ function Player:update(dt)
         self.graphics.animation:update(dt)
     end
 
+--[[
     if self.sound.moving.sample ~= nil then
         if dy ~= 0 then
             self.sound.moving.sample:play()
@@ -118,4 +140,5 @@ function Player:update(dt)
             self.sound.moving.sample:stop()
         end
     end
+--]]
 end

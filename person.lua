@@ -9,8 +9,8 @@ function Person:new(game)
     local newPerson = Entity:new(game)
     newPerson.type = "person"
     newPerson.size = {
-        x = 30,
-        y = 66
+        x = 51,
+        y = 110
     }
     newPerson.x = 700
     newPerson.y = ScreenHeight - newPerson.size.y
@@ -18,7 +18,7 @@ function Person:new(game)
     newPerson.speed = 2
 
     newPerson.graphics = {
-        source = "assets/images/person-sprites.png"
+        source = "assets/images/SmallPerson.png"
     }
 
     if game.graphics ~= nil and game.animation ~= nil then
