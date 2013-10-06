@@ -1,8 +1,6 @@
 require 'input'
 require 'player'
 require 'scary_animal'
-require 'flying_animal'
-require 'obstacle'
 require 'world'
 require 'distance'
 require 'conf'
@@ -14,11 +12,9 @@ love.animation = require 'vendor/anim8'
 local entities = {}
 local world = World:new(love)
 local image = love.graphics.newImage("assets/images/BackgroundImage2.png")
---local image = love.graphics.newImage("assets/images/background.png")
 local quad = love.graphics.newQuad(0,0, ScreenWidth, ScreenHeight, image:getWidth(), image:getHeight())
 local quad2 = love.graphics.newQuad(ScreenWidth, ScreenHeight, ScreenWidth, ScreenHeight, image:getWidth(), image:getHeight())
 
---local max_view = -450
 local view_width = 0
 local view_height = 0
 
@@ -49,33 +45,18 @@ function initGame()
   spawningCrowd = false
 
   isGameOver = false  
-    
-  --[[
-  panicmeter:incPanic()  
-  panicmeter:incPanic()  
-  panicmeter:incPanic()  
-  panicmeter:incPanic()  
-  --]]
-  
+      
   table.insert(entities, player)
   table.insert(entities, world)
   table.insert(entities, distance)
   table.insert(entities, panicmeter)
   
-  --cron.after(math.random(2, 4), spawnScaryAnimal)
 end
 
 function spawnScaryAnimal()
---    local scaryAnimal = ScaryAnimal:new(love)
 
-    local toGen = math.random(1,2)
-    local scaryAnimal = nil
-    if toGen == 1 then
-      scaryAnimal = FlyingAnimal:new(love)
-    else
-      scaryAnimal = ScaryAnimal:new(love)
-    end
-     
+    local scaryAnimal = ScaryAnimal:createRandomScaryAnimal(game)
+    
     table.insert(entities, scaryAnimal)
     
     scaryAnimalsSpawning = scaryAnimalsSpawning - 1
@@ -86,7 +67,7 @@ function removeOutOfBoundsCrowds()
     local hadPerson = false
     while i <= #entities do
        if entities[i].type ~= nil and entities[i].type == "person" then
-          if not world:onScreen(entities[i]) then
+          if not world:rightOfLeftBorder(entities[i]) then
             table.remove(entities, i)
           else
             hadPerson = true
@@ -108,11 +89,14 @@ function isPanicmeterFull()
 end
 
 function spawnCrowd()
-    local person = Person:new(love)
     local i = 0
+    local lastPerson = nil
     for i=0, math.random(0, 2) do
-      local person = Person:new(love)
-      person.x = person.x - (person.size.x * i)
+      local person = Person:createRandomPerson(love)
+      if lastPerson ~= nil then
+        person.x = (lastPerson.size.x) + lastPerson.x        
+      end
+      lastPerson = person
       table.insert(entities, person)
     end
     spawningCrowd = false
@@ -187,26 +171,13 @@ function love.update(dt)
     --]]
     
     --Spawn one animal every 2-4 seconds, up to 3 total
-    print(scaryAnimalCount .. ", " .. scaryAnimalsSpawning)
     if scaryAnimalCount < 3 and scaryAnimalsSpawning == 0 then
       cron.after(math.random(2, 4), spawnScaryAnimal)
       scaryAnimalsSpawning = scaryAnimalsSpawning + 1
     end
-
-    --Spawn up to 3 scary animals, with a certain percentage chance
-    --[[
-    local spawnPerc = math.random(1, 100)
-    if spawnPerc >= 99 and scaryAnimalCount < 3 then
-      spawnScaryAnimal()
-    end
-    --]]
     
-    if view_width > -ScreenWidth then
-            --love.graphics.drawq(image, quad, 0, view_height)
-            --love.graphics.drawq(image, quad, view_width, view_height)
-            
+    if view_width > -ScreenWidth then            
             view_width = view_width - 2
-            print(view_width)
             if view_width <= -ScreenWidth then
                  view_width = 0
              end
@@ -242,7 +213,6 @@ function drawGameOver()
   love.graphics.print(msg1, ScreenWidth/2-font:getWidth(msg1)/2, ScreenHeight/2-font:getHeight());
   love.graphics.print(msg2, ScreenWidth/2-font:getWidth(msg2)/2, ScreenHeight/2);
   love.graphics.setColor(255, 255, 255,255);
-  return  
 end  
 
 function drawGameScreen()

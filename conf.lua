@@ -10,6 +10,8 @@ DistanceMeterYOffset = 30
 DistanceMeterXOffset = ScreenWidth - 260
 DistanceFontSize = 20
 PathHeightOffset = 30
+CameraXSpeed = 2
+GroundYOffset = 23
 
 function love.conf(config)
     config.title = "New Game - Alex's Team"

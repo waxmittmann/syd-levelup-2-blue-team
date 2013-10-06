@@ -1,6 +1,5 @@
 require 'input'
 require 'player'
-require 'obstacle'
 require 'world'
 require 'conf'
 
@@ -30,14 +29,10 @@ function Panicmeter:update(dt)
   end
 end
 
-function Panicmeter:draw()
-  --distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
-	--self.game.graphics.print(distance, DistanceMeterXOffset, DistanceMeterYOffset)
-  
+function Panicmeter:draw()  
   self.game.graphics.setColor(255, 255, 255, 255);
   self.game.graphics.rectangle("fill", self.x, self.y, self.size.x, self.size.y)
   
-  --print((self.counter/100.0))
   self.game.graphics.setColor(255, 0, 0, 255);
   self.game.graphics.rectangle("fill", self.x, self.y, ((self.counter/100.0) * self.size.x), self.size.y)
 
@@ -45,9 +40,6 @@ function Panicmeter:draw()
   self.game.graphics.rectangle("line", self.x, self.y, ((self.counter/100.0) * self.size.x), self.size.y)
   self.game.graphics.setColor(0, 0, 0, 255);
   self.game.graphics.rectangle("line", self.x, self.y, self.size.x, self.size.y)
-
-
---  print("Drawing panic meter from " .. self.x .. " , " .. self.y .. " with dims " .. ((self.counter/100.0) * self.size.x) .. " , " .. self.size.y)
 
   love.graphics.setColor(255, 255, 255,255);
 end

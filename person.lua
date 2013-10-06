@@ -4,22 +4,53 @@ Person = {}
 Person.__index = Person
 setmetatable(Person, {__index = Entity})
 
-function Person:new(game)
+function Person:createRandomPerson(game)
+    local r = math.random(1,2)
+    if r == 1 then 
+      return Person:createBoy(game)
+    else
+      return Person:createMan(game)  
+    end
+end
 
-    local newPerson = Entity:new(game)
-    newPerson.type = "person"
-    newPerson.size = {
+
+function Person:createBoy(game)
+  
+    local size = {
+        x = 40,
+        y = 121
+    }
+    local img = "assets/images/boy.png"
+    
+    return Person:new(game, size, img)
+  
+end
+
+function Person:createMan(game)
+  
+    local size = {
         x = 51,
         y = 110
     }
-    newPerson.x = 700
-    newPerson.y = ScreenHeight - newPerson.size.y
+    local img = "assets/images/SmallPerson.png"
+  
+    return Person:new(game, size, img)
+end
 
-    newPerson.speed = 2
 
+function Person:new(game, size, img)
+
+    local newPerson = Entity:new(game)
+    
     newPerson.graphics = {
-        source = "assets/images/SmallPerson.png"
+        source = img
     }
+    newPerson.size = size
+
+    newPerson.type = "person"
+    newPerson.x = 700
+    newPerson.y = ScreenHeight - newPerson.size.y - GroundYOffset
+
 
     if game.graphics ~= nil and game.animation ~= nil then
         newPerson.graphics.sprites = game.graphics.newImage(newPerson.graphics.source)
@@ -39,7 +70,7 @@ end
 
 function Person:update(dt)
 
-    self.x = self.x - self.speed
+    self.x = self.x - CameraXSpeed
 
     if self.graphics.animation ~= nil then
         self.graphics.animation:update(dt)

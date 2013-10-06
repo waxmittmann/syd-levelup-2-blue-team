@@ -15,21 +15,23 @@ function Player:new(game, config)
     newPlayer.size = config.size or {
         x = 52,
         y = 50
---        x = 125,
---        y = 87
     }
-    newPlayer.x = config.x or 100
+    csize = {
+        x = 10,
+        y = 10
+    }
+
+    newPlayer.x = config.x or 200
     newPlayer.originX = newPlayer.x
-    newPlayer.y = config.y or ScreenHeight - newPlayer.size.y
+    newPlayer.y = config.y or ScreenHeight - newPlayer.size.y - GroundYOffset
     newPlayer.dy = config.dy or 0
 --    newPlayer.jump_height = config.jump_height or 300
 --    newPlayer.gravity = config.gravity or 400
     newPlayer.jump_height = config.jump_height or 600
     newPlayer.gravity = config.gravity or 600
     newPlayer.speed = config.speed or 5
+    
     newPlayer.hitScaryAnimal = false
-   -- newPlayer.lastScaryAnimalHit = nil
-    --newPlayer.hitScaryAnimalLastTurn = false    
 
     newPlayer.keys = config.keys or {
         up = "up"
@@ -37,7 +39,6 @@ function Player:new(game, config)
 
     newPlayer.graphics = config.graphics or {
         source = "assets/images/PlayerAnimalSprites2.png",
---        source = "assets/images/WireframeRabbit.png",
         facing = "right"
     }
 
@@ -93,13 +94,13 @@ function Player:resetHitScaryAnimal()
 end
 
 function Player:stopFallingThroughFloor()
-    if self.y > ScreenHeight - self.size.y then
-        self.y = ScreenHeight - self.size.y
+    if self.y > ScreenHeight - self.size.y - GroundYOffset then
+        self.y = ScreenHeight - self.size.y - GroundYOffset
     end
 end
 
 function Player:isOnFloor()
-    return self.y == ScreenHeight - self.size.y
+    return self.y == ScreenHeight - self.size.y - GroundYOffset
 end
 
 function Player:handleJump()

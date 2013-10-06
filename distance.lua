@@ -1,6 +1,5 @@
 require 'input'
 require 'player'
-require 'obstacle'
 require 'world'
 require 'conf'
 
@@ -28,6 +27,7 @@ end
 function Distance:draw()
   self.game.graphics.setColor(0, 0, 0, 255);
   distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
+  --distance = self.type .. " travelled: " .. tostring(math.floor(self.counter).."m")
 	self.game.graphics.print(distance, DistanceMeterXOffset, DistanceMeterYOffset)
   self.game.graphics.setColor(255, 255, 255, 255);
 end

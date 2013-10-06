@@ -29,13 +29,6 @@ end
 
 function Entity:collisionBounds()
     if self.csize ~= nil and self.csize.x ~= nil and self.csize.y ~= nil then
---[[      print("Using collision Bounds")
-      print(
-          self.y+(self.size.y-self.csize.y)/2 .. " " ..
-          self.x+(self.size.x-self.csize.x)/2 .. " " ..
-          self.y + self.size.y-(self.size.y-self.csize.y)/2 .. " " ..
-          self.x + self.size.x-(self.size.x-self.csize.x)/2        
-      )--]]
       return {
           top = self.y+(self.size.y-self.csize.y)/2,
           left = self.x+(self.size.x-self.csize.x)/2,
