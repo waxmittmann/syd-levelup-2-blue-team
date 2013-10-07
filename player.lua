@@ -12,13 +12,15 @@ function Player:new(game, config)
     local newPlayer = Entity:new(game)
     newPlayer.type = "player"
     newPlayer.colliding = false
+    newPlayer.jumpCounter = 0
+    newPlayer.ticksElapsedSinceLastJump = 1000000
     newPlayer.size = config.size or {
         x = 52,
         y = 50
     }
     csize = {
-        x = 10,
-        y = 10
+        x = 5,
+        y = 5
     }
 
     newPlayer.x = config.x or 200
@@ -27,7 +29,8 @@ function Player:new(game, config)
     newPlayer.dy = config.dy or 0
 --    newPlayer.jump_height = config.jump_height or 300
 --    newPlayer.gravity = config.gravity or 400
-    newPlayer.jump_height = config.jump_height or 600
+--    newPlayer.jump_height = config.jump_height or 600
+    newPlayer.jump_height = config.jump_height or 350
     newPlayer.gravity = config.gravity or 600
     newPlayer.speed = config.speed or 5
     
@@ -81,6 +84,7 @@ function Player:collide(other)
   if self.lastScaryAnimalHit ~= other and other.type == 'scary_animal' and other.alreadyHit == false then
     other.alreadyHit = true
     self.hitScaryAnimal = true
+    self.flashCountDown = 120
 --    self.lastScaryAnimalHit = other
   end
 end
@@ -104,13 +108,45 @@ function Player:isOnFloor()
 end
 
 function Player:handleJump()
+--    self.dy = -self.jump_height
     self.dy = -self.jump_height
 end
 
 function Player:update(dt)
+  
+  if self.flashCountDown ~= nil and self.flashCountDown ~= 0 then
+    print(math.floor(self.flashCountDown / 5) % 2 )
+    if math.floor(self.flashCountDown / 5) % 2 == 0 then
+      self.drawMe = false
+    else
+      self.drawMe = true
+    end
+    self.flashCountDown = self.flashCountDown - 1
+  else
+    self.drawMe = true    
+  end
+  
+  if self:isOnFloor() then
+    self.jumpCounter = 0
+    self.ticksElapsedSinceLastJump = 1000000
+  end
+ 
+--  print(self.jumpCounter .. ", " .. self.ticksElapsedSinceLastJump)
+  if self.game.input.pressed(self.keys.up) and self.ticksElapsedSinceLastJump >= 20 and self.jumpCounter < 2 then
+    self:handleJump();
+    self.jumpCounter = self.jumpCounter + 1
+    self.ticksElapsedSinceLastJump = 0
+--    print("doing jump " .. self.jumpCounter)
+  elseif self.ticksElapsedSinceLastJump < 20 then
+--    print("Ticking jump")
+    self.ticksElapsedSinceLastJump = self.ticksElapsedSinceLastJump + 1
+  end
+  
+--[[  
     if self.game.input.pressed(self.keys.up) and self:isOnFloor() then
         self:handleJump();
     end
+--]]
 
     self.lastPosition = {
         x = self.x,
@@ -121,7 +157,7 @@ function Player:update(dt)
     self.y = self.y + self.dy * dt
 
     if self.colliding == true then
-      self.x = self.x - 2
+      self.x = self.x - CameraXSpeed
       self.colliding = false
     elseif self.x < self.originX then
       self.x = self.x + 1

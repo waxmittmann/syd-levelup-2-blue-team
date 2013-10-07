@@ -5,14 +5,19 @@ Person.__index = Person
 setmetatable(Person, {__index = Entity})
 
 function Person:createRandomPerson(game)
-    local r = math.random(1,2)
+    local r = math.random(1,5)
     if r == 1 then 
       return Person:createBoy(game)
+    elseif r == 2 then 
+      return Person:createMan2(game)
+    elseif r == 3 then 
+      return Person:createWoman1(game)
+    elseif r == 4 then 
+      return Person:createWoman2(game)
     else
-      return Person:createMan(game)  
+      return Person:createMan1(game)  
     end
 end
-
 
 function Person:createBoy(game)
   
@@ -26,13 +31,46 @@ function Person:createBoy(game)
   
 end
 
-function Person:createMan(game)
+function Person:createMan1(game)
   
     local size = {
         x = 51,
         y = 110
     }
     local img = "assets/images/SmallPerson.png"
+  
+    return Person:new(game, size, img)
+end
+
+function Person:createMan2(game)
+  
+    local size = {
+        x = 50,
+        y = 114
+    }
+    local img = "assets/images/Person2.png"
+  
+    return Person:new(game, size, img)
+end
+
+function Person:createWoman1(game)
+  
+    local size = {
+        x = 51,
+        y = 105
+    }
+    local img = "assets/images/Person3.png"
+  
+    return Person:new(game, size, img)
+end
+
+function Person:createWoman2(game)
+  
+    local size = {
+        x = 78,
+        y = 105
+    }
+    local img = "assets/images/Celine3.png"
   
     return Person:new(game, size, img)
 end

@@ -203,10 +203,10 @@ function love.update(dt)
 end
 
 function drawGameOver()
-  local image = love.graphics.newImage( 'assets/images/GameOverScreen.png' )
+  local image = love.graphics.newImage( 'assets/images/GameOverScreen2.png' )
   love.graphics.setColor(255, 255, 255,255);
   local msg1 = "You were caught! But you made it " .. distance:getDistance() .. " meters. " 
-  local msg2 = "Press Enter to play again..."
+  local msg2 = "Press Enter to escape (play) again..."
   local font = love.graphics.newFont('assets/fonts/LilyScriptOne-Regular.ttf', DistanceFontSize)
   love.graphics.draw(image, 0, 0)
   love.graphics.setColor(0, 0, 0,255);
